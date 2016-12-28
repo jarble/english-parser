@@ -14,7 +14,7 @@ same_conjugation(X,Y) :-
         ["fak","pursu","chas","mat","mak","smash","knock","tear","enrag","combin","hat","deplor","dislik","play","bak","cak","stat","creat","hat","lik","dislik","injur","giv","lov","tak","receiv","trad","urinat"],
          
         
-        ["look","spray","flow","lean","learn","destroy","wreck","insert","ruin","madden","anger","sever","walk","build","burn","talk","speak","hurt","need","burn","knead","kill","lick","suck","melt","pelt","belt","stand","ingest"],
+        ["look","spray","flow","lean","learn","drink","destroy","wreck","insert","ruin","madden","anger","sever","walk","build","burn","talk","speak","hurt","need","burn","knead","kill","lick","suck","melt","pelt","belt","stand","ingest"],
         
         
         %add "es" to the stem in past tense
@@ -45,10 +45,10 @@ same_noun_declension(X,Y) :-
         ["person"],
         ["wolf"],
         ["half"],
-        ["dog","bottle","water","river","apple","hound","day","cat","horse","donkey","food","truck","tree","kangaroo","wall","house","building","car","bar","beam","stream","hill","rock","stone","boulder","ship","noun","verb","pronoun"],
+        ["dog","blanket","bed","bead","head","bread","pillow","chair","squirrel","snake","rat","pear","pearl","bottle","water","river","apple","hound","day","cat","horse","donkey","food","truck","tree","kangaroo","wall","house","building","car","bar","beam","stream","hill","rock","stone","boulder","ship","noun","verb","pronoun"],
          
         %add "es" to plural
-        ["fish","dingo","mango","walrus"]
+        ["fish","fox","hyena","bear","dingo","mango","walrus"]
     ]),
     memberchk(X,List),memberchk(Y,List).
  

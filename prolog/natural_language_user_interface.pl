@@ -9,7 +9,7 @@ main :-
 	term_to_atom(b(a),B),
 	writeln(b(a)),
     %Type any kind of input here to see the output! The input must be compatible with the grammar that is defined below.
-    Input = "A river is flowing.",
+    Input = "A cat is drinking water.",
     translate(Input,Output), writeln(Output).
 
 downcase_string(AnyCase,DownCase) :- 
