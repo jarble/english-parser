@@ -9,7 +9,7 @@ main :-
 	term_to_atom(b(a),B),
 	writeln(b(a)),
     %Type any kind of input here to see the output! The input must be compatible with the grammar that is defined below.
-    Input = "dog is false.",
+    Input = "A river is flowing.",
     translate(Input,Output), writeln(Output).
 
 downcase_string(AnyCase,DownCase) :- 
@@ -24,17 +24,18 @@ statements([Output|Outputs]) -->
     statement(Output),ws,".",ws_,statements(Outputs).
  
 statement(Output) -->
-	optional_an(expr(thing,Subject)),ws,coordinating_conjunctions(A),
-	{get_verb_synonym(Verb,Verb2),Output=describes(Subject,A)};
 	
 	optional_an(expr(thing,Subject)),ws,verb_phrase(Verb,Adverbs,Prep,Object,Number),
 	{get_verb_synonym(Verb,Verb2),Output=describes(Subject,verb_phrase(Verb2,adverbs(Adverbs),Prep,Object,plural))};
 
     expr(bool,Output);
-    (expr(bool,B),ws_,synonym("if"),ws_,expr(bool,A);expr(bool,A),ws_,synonym("implies"),ws_,expr(bool,B);synonym("if"),ws_,expr(bool,A),(ws,",",ws_;ws_),"then",ws_,expr(bool,B)),{Output=[A,"implies",B]}.
+    (expr(bool,B),ws_,synonym("if"),ws_,expr(bool,A);expr(bool,A),ws_,synonym("implies"),ws_,expr(bool,B);synonym("if"),ws_,expr(bool,A),(ws,",",ws_;ws_),"then",ws_,expr(bool,B)),{Output=[A,"implies",B]};
+    
+    optional_an(expr(thing,Subject)),ws,coordinating_conjunctions(A),
+	{get_verb_synonym(Verb,Verb2),Output=describes(Subject,A)}.
 
-coordinating_conjunctions([verb_phrase(Verb,Adverbs,Prep,Object,Number)]) --> verb_phrase(Verb,Adverbs,Prep,Object,Number,recursive(false)).
-coordinating_conjunctions([verb_phrase(Verb,Adverbs,Prep,Object,Number)|B]) --> verb_phrase(Verb,Adverbs,Prep,Object,Number,recursive(false)),ws_,"and",ws_,coordinating_conjunctions(B).
+coordinating_conjunctions([verb_phrase(Verb,Adverbs,Prep,Object,Number)]) --> verb_phrase(verb_synonym(Verb),Adverbs,Prep,Object,Number,recursive(false)).
+coordinating_conjunctions([verb_phrase(Verb,Adverbs,Prep,Object,Number)|B]) --> verb_phrase(verb_synonym(Verb),Adverbs,Prep,Object,Number,recursive(false)),ws_,"and",ws_,coordinating_conjunctions(B).
 
 verb_phrase(Verb,Adverbs,preposition(Prep),Object,Number,recursive(Recursive)) -->
 	verb_tense(Verb,Adverbs,Number),{Prep=none};
@@ -187,16 +188,6 @@ adjective(A) --> parentheses_expr(color,A).
 adjective(A) --> adjective_synonym(A).
 adjective(A) --> symbol(A),{same_adjective_declension(A,A)}.
 
-adjective_synonym("large") --> "large";"big";"huge";"enormous".
-adjective_synonym("small") --> "small";"tiny";"minute".
-adjective_synonym("tall") --> "tall".
-
-adjective_synonym("male") --> "male".
-adjective_synonym("female") --> "female".
-
-adjective_synonym("sad") --> "sad";"unhappy".
-adjective_synonym("angry") --> "angry";"enraged".
-
 parentheses_expr(color,A) --> symbol(A),{member(A,["red","green","blue","purple","orange","pink","yellow","white","black","transparent","brown"])}.
  
 expr(thing,singular_or_plural(A)) --> singular_or_plural(A).
@@ -232,40 +223,7 @@ parentheses_expr(int,Output) -->
 % whitespace
 ws --> "";((" ";"\t";"\n";"\r"),ws).
 ws_ --> (" ";"\n";"\r"),ws.
- 
-synonym("eat") --> "ingest".
-synonym("+") --> "plus".
-synonym("equal") --> "equivalent";"identical";"the",ws_,"same".
-synonym("equivalent") --> synonym("equal").
-synonym("identical") --> synonym("equal").
-synonym("greater") --> "more";"greater".
-synonym("more") --> synonym("greater").
-synonym(">") --> "is",ws_,synonym("greater"),ws_,"than".
-synonym("<=") --> "is",ws_,("not",ws_,synonym("greater"),ws_,"than";"less",ws_,"than",ws_,"or",ws_,synonym("equal"),ws_,"to").
-synonym("<") --> "is",ws_,"less",ws_,"than".
-synonym("=") --> "equals";"is",ws_,synonym("equal"),ws_,"to";"==";"is",ws_,"the",ws_,"same",ws_,"as";"is".
-synonym("!=") --> "is",ws_,"not",ws_,synonym("equal"),ws_,"to";"!==".
-synonym("*") --> "times";"multiplied",ws_,"by".
-synonym("/") --> "divided",ws_,"by".
-synonym("^") --> "to",ws_,"the",ws_,"power",ws_,"of";"**".
- 
-synonym("each other") --> "each",ws_,"other";"one",ws_,"another".
- 
-synonym("color") --> "hue".
- 
-synonym("an") --> "a".
- 
-synonym("and") --> "&";"&&".
-synonym("or") --> "|";"||".
- 
-synonym("below") --> "under";"underneath";"beneath".
-synonym("above") --> "over";"atop";"on".
- 
-synonym("inside") --> "within".
- 
-synonym("if") --> "If".
- 
-synonym(A) --> A.
+
  
 a_number(A) --> a_double(A);an_int(A).
 a_double([A,B]) -->
@@ -304,60 +262,7 @@ last_char(S_, X) :-
     name(S, N),
     reverse(N, [F|_]),
     name(X, [F]).
- 
-%each stem is an infinitive
-same_conjugation(X,Y) :-
-    member(List,[
-         
-        %add "ing" to present tense and "e" to infinitive
-        ["fak","chas","mat","mak","smash","knock","tear","enrag","combin","hat","deplor","dislik","play","bak","cak","stat","creat","hat","lik","dislik","injur","giv","lov","tak","receiv","trad","urinat"],
-         
-        ["look","lean","learn","destroy","wreck","insert","ruin","madden","anger","sever","walk","build","burn","talk","speak","hurt","need","burn","knead","kill","lick","suck","melt","pelt","belt","stand","ingest"],
-         
-        %add "es" to the stem in past tense
-        ["mix","miss","kiss","hiss","piss"],
-         
-        %add "ting" to the stem for present tense
-        ["sit","cut"],
-         
-        %add "ning" to the stem for present tense
-        ["run"],
-         
-        %add "ped" to past tense
-        ["sip","tap","drop","shop","stop","hop","mop","slap","rap"],
-         
-        ["writ"],
-        ["fall"],
-        ["read"],
-        ["speak"],
-        ["eat"],
-        ["have"],
-        ["pee"]
-    ]),
-    memberchk(X,List),memberchk(Y,List).
- 
-same_noun_declension(X,Y) :-
-    member(List,[
-        ["sheep"],
-        ["person"],
-        ["wolf"],
-        ["half"],
-        ["dog","day","cat","horse","food","truck","tree","kangaroo","wall","house","building","car","bar","beam","stream","hill","rock","stone","boulder","ship","noun","verb","pronoun"],
-         
-        %add "es" to plural
-        ["fish","dingo","mango","walrus"]
-    ]),
-    memberchk(X,List),memberchk(Y,List)=
- 
-same_adjective_declension(X,Y) :-
-    member(List,[
-        ["big"],
-        ["large","true","false","huge","same","some"],
-        ["small","tall"],
-        
-        ["great","slow"]
-    ]),
-    memberchk(X,List),memberchk(Y,List).
+
 
 adverb(X) -->
 	symbol(X),
@@ -531,13 +436,8 @@ same_adjective_declensions(X,List) :-
 get_verb_synonym(Synonym,Output) :-
     Synonym = [Tense,Synonym1],verb_synonym(Synonym1,Synonym2),Output=[Tense,Synonym2];
     Synonym=Output.
- 
-verb_synonym(X,"mix") :- member(X,["mix","combin"]).
-verb_synonym(X,"anger") :- member(X,["anger","enrag","madden"]).
-verb_synonym(X,"eat") :- member(X,["eat","ingest"]).
-verb_synonym(X,"urinat") :- member(X,["pee","urinat","piss"]).
-verb_synonym(X,"hat") :- member(X,["hat","deplor","dislik"]).
-verb_synonym(X,"mix") :- member(X,["mix","combin"]).
-verb_synonym(X,"cut") :- member(X,["sever","cut"]).
+
  
 noun(X) --> symbol(X),{same_noun_declension(X,_)}.
+
+:- include(thesaurus).
