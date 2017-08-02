@@ -3,7 +3,6 @@ verb_synonym(X,Y) :-
 		["mix","combin"],
 		["anger","enrag","madden"],
 		["eat","ingest"],
-		["urinat", "pee","piss"],
 		["hat","deplor","dislik","loath"],
 		["mix","combin"],
 		["cut","sever"],
@@ -32,7 +31,7 @@ same_conjugation(X,Y) :-
         ["sit","cut"],
          
         %add "ning" to the stem for present tense
-        ["run"],
+        ["run","gun","pun","stun"],
          
         %add "ped" to past tense
         ["sip","tap","drop","shop","stop","hop","mop","slap","rap"],
@@ -52,14 +51,14 @@ same_conjugation(X,Y) :-
  
 same_noun_declension(X,Y) :-
     member(List,[
-        ["sheep","deer","headquarters","aircraft","crossroads","spacecraft","urine","pee","semen"],
+        ["sheep","deer","headquarters","aircraft","crossroads","spacecraft"],
         ["person"],
         ["wolf"],
         ["half"],
         ["dog","number","day","monday","eve","today","yesterday","tomorrow","monday","tuesday","wednesday","thursday","friday","saturday","sunday","year","month","time","hour","coyote","ball","boy","girl","book","elk","lion","tiger","leopard","jaguar","raccoon","essay","letter","steak","word","poem","stag","hyena","bear","rabbit","frog","hag","blanket","bed","bead","head","bread","pillow","chair","squirrel","snake","rat","pear","pearl","bottle","water","river","apple","hound","day","cat","horse","donkey","food","salad","hamburger","cake","carrot","truck","tree","kangaroo","wall","house","building","car","bar","beam","stream","hill","rock","stone","boulder","ship","noun","verb","pronoun","bladder","toilet"],
         
         %add "es" to plural
-        ["fish","fox","dingo","mango","walrus","sandwich","penis","iris","piss"],
+        ["fish","fox","dingo","mango","walrus","sandwich","iris",],
         ["story"]
     ]),
     memberchk(X,List),memberchk(Y,List).
@@ -124,7 +123,7 @@ synonym("evening") --> "eve".
 
 synonym(A) --> A.
 
-adjective_synonym("large") --> "big";"huge";"enormous".
+adjective_synonym("large") --> "big";"huge";"enormous";"collossal".
 adjective_synonym("small") --> "tiny";"minute".
 adjective_synonym("tall") --> "tall".
 
